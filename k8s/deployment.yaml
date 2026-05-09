@@ -5,23 +5,27 @@ metadata:
  namespace: default
 spec:
  replicas: 1
-  selector:
+ selector:
    matchLabels:
      app: auth-pod
+
 
  template:
    metadata:
      labels:
        app: auth-pod
 
+
    spec:
      containers:
        - name: auth-container
-         image: 571673065136.dkr.ecr.us-east-1.amazonaws.com/awsecrtrails/ecr-first-repo
+         image: 494934332037.dkr.ecr.ap-south-1.amazonaws.com/anujjain-first-ecr-repo:latest
          imagePullPolicy: IfNotPresent   # better for faster startup
+
 
          ports:
            - containerPort: 3000
+
 
          resources:
            requests:
@@ -31,12 +35,14 @@ spec:
              memory: "128Mi"
              cpu: "100m"
 
+
          livenessProbe:
            httpGet:
              path: /health
              port: 3000
            initialDelaySeconds: 30
            periodSeconds: 10
+
 
          readinessProbe:
            httpGet:
