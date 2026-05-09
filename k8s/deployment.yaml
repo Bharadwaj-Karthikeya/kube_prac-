@@ -1,52 +1,52 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
- name: auth-deployment
- namespace: default
+  name: auth-deployment
+  namespace: default
+
 spec:
- replicas: 1
- selector:
-   matchLabels:
-     app: auth-pod
+  replicas: 1
 
+  selector:
+    matchLabels:
+      app: auth-pod
 
- template:
-   metadata:
-     labels:
-       app: auth-pod
+  template:
+    metadata:
+      labels:
+        app: auth-pod
 
+    spec:
+      containers:
+        - name: auth-container
+          image: 571673065136.dkr.ecr.us-east-1.amazonaws.com/awsecrtrails/ecr-first-repo:latest
+          imagePullPolicy: IfNotPresent
 
-   spec:
-     containers:
-       - name: auth-container
-         image: 494934332037.dkr.ecr.ap-south-1.amazonaws.com/anujjain-first-ecr-repo:latest
-         imagePullPolicy: IfNotPresent   # better for faster startup
+          ports:
+            - containerPort: 3000
 
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "10m"
 
-         ports:
-           - containerPort: 3000
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
 
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
 
-         resources:
-           requests:
-             memory: "64Mi"
-             cpu: "10m"
-           limits:
-             memory: "128Mi"
-             cpu: "100m"
+            initialDelaySeconds: 30
+            periodSeconds: 10
 
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
 
-         livenessProbe:
-           httpGet:
-             path: /health
-             port: 3000
-           initialDelaySeconds: 30
-           periodSeconds: 10
-
-
-         readinessProbe:
-           httpGet:
-             path: /health
-             port: 3000
-           initialDelaySeconds: 10
-           periodSeconds: 5
+            initialDelaySeconds: 10
+            periodSeconds: 5
